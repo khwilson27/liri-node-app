@@ -15,7 +15,6 @@ var logInputs = function() {
             console.log("Inputs have been logged.")
         }); // closes fs appendFile function
 }
-
 logInputs();
 
 var spotifySearch = function(songTitle) {
@@ -52,8 +51,19 @@ var spotifySearch = function(songTitle) {
 } // closes spotifySearch function
 
 var twitterSearch = function() {
-       
-        
+    var keys = require('./keys.js');
+    var Twitter = require('twitter');
+
+    var client = new Twitter(keys.twitterKeys);
+    
+    var params = {q: 'node.js'};
+    client.get('search/tweets', params, function(error, tweets, response) {
+    if (error) {
+        return console.log(error);
+    }
+    console.log(JSON.stringify(tweets,null,1)); 
+    });
+
 } // closes twitterSearch function
 
 var omdbSearch = function(movie) {
@@ -106,6 +116,7 @@ var omdbSearch = function(movie) {
 
 switch(process.argv[2]) {
     case "my-tweets":
+        twitterSearch();
         break;
 
     case "spotify-this-song":
@@ -125,11 +136,15 @@ switch(process.argv[2]) {
             }
         
             var dataArr = data.split(",");
-
-            if (dataArr[0] === "spotify-this-song") {
+            
+            if (!dataArr[0]) {
+                return console.log("Invalid inputs on random.txt file!")
+            } else if (dataArr[0] === "spotify-this-song") {
                 spotifySearch(dataArr[1]);
             } else if (dataArr[0] === "movie-this") {
                 omdbSearch(dataArr[1]);
+            } else if (dataArr[0] === "my-tweets") {
+                twitterSearch();
             }
         }); // closes fs readFile function
         break;
