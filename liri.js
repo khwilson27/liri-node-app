@@ -56,19 +56,26 @@ var twitterSearch = function() {
 
     var client = new Twitter(keys.twitterKeys);
     
-    var params = {q: 'node.js'};
-    client.get('search/tweets', params, function(error, tweets, response) {
-    if (error) {
-        return console.log(error);
-    }
-    console.log(JSON.stringify(tweets,null,1)); 
-    });
+    var params = {screen_name: "kwilsonUCI", count: 20};
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+        if (error) {
+            return console.log(error);
+        }
+
+        var tweetData = [];
+
+        for (var i = 0; i < tweets.length; i++) {
+            tweetData.unshift("#" + [tweets.length-i] + ": " + tweets[i].created_at + ": " + tweets[i].text);
+        }
+
+        console.log(tweetData);
+    }); // closes api call
 
 } // closes twitterSearch function
 
 var omdbSearch = function(movie) {
     // Then run a request to the OMDB API with the movie specified
-    request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&r=json`, function(error, response, body) {
+    request(`http://www.omdbapi.com/?t=${movie}&y=&plot=short&r=json&apikey=40e9cece`, function(error, response, body) {
 
     // If the request is successful (i.e. if the response status code is 200)
     if (!error && response.statusCode === 200) {
