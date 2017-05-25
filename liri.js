@@ -127,7 +127,11 @@ switch(process.argv[2]) {
         break;
 
     case "spotify-this-song":
-        spotifySearch(process.argv[3]);
+        if (process.argv[3]) {
+            spotifySearch(process.argv[3]);
+        } else {
+            console.log("Enter song name as arguement.")
+        }
         break;
 
     case "movie-this":
